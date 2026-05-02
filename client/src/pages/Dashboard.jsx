@@ -6,6 +6,8 @@ import ChatInput from '../components/ChatInput';
 import axios from 'axios';
 import { Sparkles, AlertCircle } from 'lucide-react';
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export default function Dashboard() {
   const { chats, createNewChat, fetchChats, fetchGallery } = useContext(DataContext);
   const [currentChatId, setCurrentChatId] = useState(null);
@@ -16,7 +18,7 @@ export default function Dashboard() {
   // Load chat messages when a chat is selected
   useEffect(() => {
     if (currentChatId) {
-      axios.get(`http://localhost:3000/api/chats/${currentChatId}`)
+      axios.get(`${API}/api/chats/${currentChatId}`)
         .then(res => setCurrentMessages(res.data.messages))
         .catch(err => console.error("Error loading chat messages", err));
     } else {
@@ -59,7 +61,7 @@ export default function Dashboard() {
 
     try {
       // 3. Make API Call to generate image (now returns JSON with base64 from mongo)
-      const response = await axios.post('http://localhost:3000/api/generate', { prompt, style, size });
+      const response = await axios.post(`${API}/api/generate`, { prompt, style, size });
       const savedImage = response.data; // This is the Image document from MongoDB
 
       // Refresh gallery to include new image
@@ -75,7 +77,7 @@ export default function Dashboard() {
       setCurrentMessages(updatedMessages);
 
       // Save updated messages to MongoDB Chat
-      await axios.put(`http://localhost:3000/api/chats/${activeChatId}`, { messages: updatedMessages });
+      await axios.put(`${API}/api/chats/${activeChatId}`, { messages: updatedMessages });
       fetchChats(); // Update sidebar
 
     } catch (error) {
@@ -85,7 +87,7 @@ export default function Dashboard() {
         m.isLoading ? { ...m, isLoading: false, error: errorMessage } : m
       );
       setCurrentMessages(updatedMessages);
-      await axios.put(`http://localhost:3000/api/chats/${activeChatId}`, { messages: updatedMessages });
+      await axios.put(`${API}/api/chats/${activeChatId}`, { messages: updatedMessages });
     } finally {
       setIsGenerating(false);
     }

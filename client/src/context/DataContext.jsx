@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export const DataContext = createContext();
 
+const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 export const DataProvider = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [gallery, setGallery] = useState([]);
@@ -14,7 +16,7 @@ export const DataProvider = ({ children }) => {
 
   const fetchChats = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/chats');
+      const res = await axios.get(`${API}/api/chats`);
       setChats(res.data);
     } catch (err) {
       console.error('Error fetching chats:', err);
@@ -23,7 +25,7 @@ export const DataProvider = ({ children }) => {
 
   const fetchGallery = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/gallery');
+      const res = await axios.get(`${API}/api/gallery`);
       setGallery(res.data);
     } catch (err) {
       console.error('Error fetching gallery:', err);
@@ -32,7 +34,7 @@ export const DataProvider = ({ children }) => {
 
   const removeImageFromGallery = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/gallery/${id}`);
+      await axios.delete(`${API}/api/gallery/${id}`);
       setGallery(gallery.filter(img => img._id !== id));
     } catch (err) {
       console.error('Error deleting image:', err);
@@ -41,7 +43,7 @@ export const DataProvider = ({ children }) => {
 
   const createNewChat = async (title) => {
     try {
-      const res = await axios.post('http://localhost:3000/api/chats', { title, messages: [] });
+      const res = await axios.post(`${API}/api/chats`, { title, messages: [] });
       setChats([res.data, ...chats]);
       return res.data;
     } catch (err) {
