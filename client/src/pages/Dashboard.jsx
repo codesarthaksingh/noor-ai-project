@@ -6,7 +6,7 @@ import ChatInput from '../components/ChatInput';
 import axios from 'axios';
 import { Sparkles, AlertCircle } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API = 'http://localhost:3000';
 
 export default function Dashboard() {
   const { chats, createNewChat, fetchChats, fetchGallery, headers } = useContext(DataContext);
@@ -38,7 +38,7 @@ export default function Dashboard() {
     setCurrentChatId(null);
   };
 
-  const generateImage = async (prompt, style, size) => {
+  const generateImage = async (prompt, style, size, isEnhanceOn) => {
     setIsGenerating(true);
     
     // Create new chat if none exists
@@ -50,7 +50,8 @@ export default function Dashboard() {
     }
 
     // 1. Add User Prompt
-    const userMsg = { id: Date.now().toString(), role: 'user', content: prompt, style, size };
+    const userMsgId = Date.now().toString();
+    const userMsg = { id: userMsgId, role: 'user', content: prompt, originalPrompt: '', style, size };
     let updatedMessages = [...currentMessages, userMsg];
     setCurrentMessages(updatedMessages);
 
@@ -60,8 +61,31 @@ export default function Dashboard() {
     setCurrentMessages(updatedMessages);
 
     try {
-      // 3. Make API Call to generate image (now returns JSON with base64 from mongo)
-      const response = await axios.post(`${API}/api/generate`, { prompt, style, size }, { headers });
+      let finalPrompt = prompt;
+      let originalPrompt = '';
+
+      if (isEnhanceOn) {
+        try {
+          const enhanceRes = await axios.post(`${API}/api/enhance`, { prompt }, { headers });
+          if (enhanceRes.data.enhanced) {
+            finalPrompt = enhanceRes.data.enhanced;
+            originalPrompt = prompt;
+            
+            // Update the user message to show the enhanced prompt
+            updatedMessages = updatedMessages.map(m => 
+              m.id === userMsgId 
+                ? { ...m, content: finalPrompt, originalPrompt: prompt }
+                : m
+            );
+            setCurrentMessages(updatedMessages);
+          }
+        } catch (err) {
+          console.error("Enhancement failed, falling back to original prompt", err);
+        }
+      }
+
+      // 3. Make API Call to generate image
+      const response = await axios.post(`${API}/api/generate`, { prompt: finalPrompt, originalPrompt, style, size }, { headers });
       const savedImage = response.data; // This is the Image document from MongoDB
 
       // Refresh gallery to include new image
@@ -124,6 +148,15 @@ export default function Dashboard() {
                 <div className={`max-w-[80%] ${msg.role === 'user' ? 'order-1' : 'order-2'}`}>
                   {msg.role === 'user' ? (
                     <div className="bg-surface border border-white/10 text-textMain px-5 py-3 rounded-2xl rounded-tr-sm shadow-md">
+                      {msg.originalPrompt && msg.originalPrompt !== msg.content && (
+                        <div className="mb-2 pb-2 border-b border-white/10">
+                          <p className="text-xs text-textMain/50 mb-1">Original Prompt:</p>
+                          <p className="text-sm text-textMain/80">{msg.originalPrompt}</p>
+                        </div>
+                      )}
+                      {msg.originalPrompt && msg.originalPrompt !== msg.content && (
+                        <p className="text-xs text-accent mb-1 flex items-center gap-1"><Sparkles size={10} /> Enhanced Prompt:</p>
+                      )}
                       <p className="text-base">{msg.content}</p>
                       <div className="flex gap-2 mt-2">
                         <span className="text-xs uppercase px-2 py-1 bg-white/5 rounded text-textMain/70">{msg.style}</span>
