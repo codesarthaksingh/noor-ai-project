@@ -4,7 +4,6 @@ const messageSchema = new mongoose.Schema({
   id: { type: String, required: true },
   role: { type: String, enum: ['user', 'ai'], required: true },
   content: { type: String, default: '' },
-  originalPrompt: { type: String, default: '' },
   style: { type: String, default: '' },
   size: { type: String, default: '' },
   error: { type: String, default: '' },

@@ -1,5 +1,5 @@
 import express from 'express';
-import { generateImage, enhancePrompt } from '../controllers/aiController.js';
+import { generateImage } from '../controllers/aiController.js';
 import { getChats, getChatById, createChat, updateChat } from '../controllers/chatController.js';
 import { getGallery, deleteGalleryImage } from '../controllers/galleryController.js';
 
@@ -7,7 +7,6 @@ const router = express.Router();
 
 // AI routes
 router.post('/generate', generateImage);
-router.post('/enhance', enhancePrompt);
 
 // Chat routes
 router.get('/chats', getChats);

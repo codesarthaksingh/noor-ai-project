@@ -8,33 +8,17 @@ export default function ChatInput({ onSubmit, isGenerating }) {
   const [prompt, setPrompt] = useState('');
   const [size, setSize] = useState('Square');
   const [style, setStyle] = useState('Realistic');
-  const [isEnhanceOn, setIsEnhanceOn] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (prompt.trim() && !isGenerating) {
-      onSubmit(prompt, style, size, isEnhanceOn);
+      onSubmit(prompt, style, size);
       setPrompt('');
     }
   };
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4 flex flex-col gap-3">
-      <div className="flex justify-end px-2">
-        <button
-          type="button"
-          onClick={() => setIsEnhanceOn(!isEnhanceOn)}
-          className={`text-xs px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors border ${
-            isEnhanceOn 
-              ? 'bg-accent/10 border-accent/30 text-accent' 
-              : 'bg-surface border-white/10 text-textMain/50 hover:text-textMain'
-          }`}
-        >
-          <Sparkles size={12} />
-          {isEnhanceOn ? 'Enhance Prompt: ON' : 'Enhance Prompt: OFF'}
-        </button>
-      </div>
-
       <form 
         onSubmit={handleSubmit}
         className="relative flex items-center bg-surface border border-white/10 rounded-2xl shadow-xl pl-6 pr-2 py-2 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all"
