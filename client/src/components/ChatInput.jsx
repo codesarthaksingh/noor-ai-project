@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Send, Sparkles, ChevronDown } from 'lucide-react';
+import { Send, Sparkles } from 'lucide-react';
+import CustomSelect from './CustomSelect';
 
 const SIZES = ['Square', 'Landscape', 'Portrait'];
 const STYLES = ['Cinematic', 'Realistic', 'Anime', 'Cartoon', '3D Render', 'Oil Painting'];
@@ -21,37 +22,23 @@ export default function ChatInput({ onSubmit, isGenerating }) {
     <div className="w-full max-w-4xl mx-auto p-4 flex flex-col gap-3">
       <form 
         onSubmit={handleSubmit}
-        className="relative flex items-center bg-surface border border-white/10 rounded-2xl shadow-xl pl-6 pr-2 py-2 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all"
+        className="relative flex items-center bg-surface border border-white/10 rounded-2xl shadow-xl pl-6 pr-2 py-2 focus-within:border-accent focus-within:ring-1 focus-within:ring-accent transition-all gap-2"
       >
         {/* Style Dropdown */}
-        <div className="relative flex items-center group shrink-0">
-          <select 
-            value={style}
-            onChange={(e) => setStyle(e.target.value)}
-            className="bg-transparent text-textMain/80 group-hover:text-accent text-sm font-semibold outline-none cursor-pointer appearance-none pr-5 py-2 hover:text-accent transition-colors"
-          >
-            {STYLES.map(s => <option key={s} value={s} className="bg-surface/95 text-textMain hover:bg-accent/20">{s}</option>)}
-          </select>
-          <div className="absolute right-0 pointer-events-none text-textMain/50 group-hover:text-accent transition-colors">
-             <ChevronDown size={14} />
-          </div>
-        </div>
+        <CustomSelect 
+          options={STYLES}
+          value={style}
+          onChange={setStyle}
+        />
 
-        <div className="w-px h-5 bg-white/10 mx-3 sm:mx-4 shrink-0"></div>
+        <div className="w-px h-5 bg-white/10 shrink-0"></div>
 
-        {/* Format Dropdown */}
-        <div className="relative flex items-center group shrink-0">
-          <select 
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-            className="bg-transparent text-textMain/80 group-hover:text-accent text-sm font-semibold outline-none cursor-pointer appearance-none pr-5 py-2 hover:text-accent transition-colors"
-          >
-            {SIZES.map(s => <option key={s} value={s} className="bg-surface/95 text-textMain hover:bg-accent/20">{s}</option>)}
-          </select>
-          <div className="absolute right-0 pointer-events-none text-textMain/50 group-hover:text-accent transition-colors">
-             <ChevronDown size={14} />
-          </div>
-        </div>
+        {/* Size Dropdown */}
+        <CustomSelect 
+          options={SIZES}
+          value={size}
+          onChange={setSize}
+        />
 
         <div className="hidden sm:block w-px h-5 bg-white/10 mx-4 shrink-0"></div>
 
