@@ -30,7 +30,10 @@ export default function CustomSelect({ options, value, onChange, label }) {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-40 bg-surface border border-white/20 rounded-lg shadow-xl overflow-hidden z-50 backdrop-blur-sm">
+        <div className="fixed bg-surface border border-white/20 rounded-lg shadow-2xl overflow-hidden z-50 backdrop-blur-sm w-48" style={{
+          top: dropdownRef.current?.getBoundingClientRect().bottom + 8,
+          left: dropdownRef.current?.getBoundingClientRect().left,
+        }}>
           {options.map((option) => (
             <button
               key={option}
