@@ -31,7 +31,7 @@ export default function CustomSelect({ options, value, onChange, label }) {
 
       {isOpen && (
         <div className="fixed bg-surface border border-white/20 rounded-lg shadow-2xl overflow-hidden z-50 backdrop-blur-sm w-48" style={{
-          top: dropdownRef.current?.getBoundingClientRect().bottom + 8,
+          bottom: window.innerHeight - dropdownRef.current?.getBoundingClientRect().top + 8,
           left: dropdownRef.current?.getBoundingClientRect().left,
         }}>
           {options.map((option) => (
