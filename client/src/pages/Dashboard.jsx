@@ -9,7 +9,7 @@ import { Sparkles, AlertCircle } from 'lucide-react';
 const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export default function Dashboard() {
-  const { chats, createNewChat, fetchChats, fetchGallery } = useContext(DataContext);
+  const { chats, createNewChat, fetchChats, fetchGallery, headers } = useContext(DataContext);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [currentMessages, setCurrentMessages] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -18,7 +18,7 @@ export default function Dashboard() {
   // Load chat messages when a chat is selected
   useEffect(() => {
     if (currentChatId) {
-      axios.get(`${API}/api/chats/${currentChatId}`)
+      axios.get(`${API}/api/chats/${currentChatId}`, { headers })
         .then(res => setCurrentMessages(res.data.messages))
         .catch(err => console.error("Error loading chat messages", err));
     } else {
@@ -61,7 +61,7 @@ export default function Dashboard() {
 
     try {
       // 3. Make API Call to generate image (now returns JSON with base64 from mongo)
-      const response = await axios.post(`${API}/api/generate`, { prompt, style, size });
+      const response = await axios.post(`${API}/api/generate`, { prompt, style, size }, { headers });
       const savedImage = response.data; // This is the Image document from MongoDB
 
       // Refresh gallery to include new image
@@ -77,7 +77,7 @@ export default function Dashboard() {
       setCurrentMessages(updatedMessages);
 
       // Save updated messages to MongoDB Chat
-      await axios.put(`${API}/api/chats/${activeChatId}`, { messages: updatedMessages });
+      await axios.put(`${API}/api/chats/${activeChatId}`, { messages: updatedMessages }, { headers });
       fetchChats(); // Update sidebar
 
     } catch (error) {
@@ -87,7 +87,7 @@ export default function Dashboard() {
         m.isLoading ? { ...m, isLoading: false, error: errorMessage } : m
       );
       setCurrentMessages(updatedMessages);
-      await axios.put(`${API}/api/chats/${activeChatId}`, { messages: updatedMessages });
+      await axios.put(`${API}/api/chats/${activeChatId}`, { messages: updatedMessages }, { headers });
     } finally {
       setIsGenerating(false);
     }

@@ -12,6 +12,7 @@ const messageSchema = new mongoose.Schema({
 });
 
 const chatSchema = new mongoose.Schema({
+  userId: { type: String, required: true, index: true },
   title: { type: String, default: 'New Conversation' },
   messages: [messageSchema],
   createdAt: { type: Date, default: Date.now },

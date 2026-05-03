@@ -3,9 +3,13 @@ import Image from '../models/Image.js';
 
 export const generateImage = async (req, res) => {
   const { prompt, style, size } = req.body;
+  const userId = req.headers['x-user-id'];
 
   if (!prompt) {
     return res.status(400).json({ error: "Please provide a prompt." });
+  }
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID?.trim();
@@ -59,6 +63,7 @@ Classification:`;
 
     // Save to MongoDB
     const newImage = new Image({
+      userId,
       prompt,
       style,
       size,
