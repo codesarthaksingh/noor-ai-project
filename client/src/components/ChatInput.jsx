@@ -28,9 +28,9 @@ export default function ChatInput({ onSubmit, isGenerating }) {
           <select 
             value={style}
             onChange={(e) => setStyle(e.target.value)}
-            className="bg-transparent text-textMain/80 group-hover:text-accent text-sm font-semibold outline-none cursor-pointer appearance-none pr-5 py-2"
+            className="bg-transparent text-textMain/80 group-hover:text-accent text-sm font-semibold outline-none cursor-pointer appearance-none pr-5 py-2 hover:text-accent transition-colors"
           >
-            {STYLES.map(s => <option key={s} value={s} className="bg-surface text-textMain">{s}</option>)}
+            {STYLES.map(s => <option key={s} value={s} className="bg-surface/95 text-textMain hover:bg-accent/20">{s}</option>)}
           </select>
           <div className="absolute right-0 pointer-events-none text-textMain/50 group-hover:text-accent transition-colors">
              <ChevronDown size={14} />
@@ -44,9 +44,9 @@ export default function ChatInput({ onSubmit, isGenerating }) {
           <select 
             value={size}
             onChange={(e) => setSize(e.target.value)}
-            className="bg-transparent text-textMain/80 group-hover:text-accent text-sm font-semibold outline-none cursor-pointer appearance-none pr-5 py-2"
+            className="bg-transparent text-textMain/80 group-hover:text-accent text-sm font-semibold outline-none cursor-pointer appearance-none pr-5 py-2 hover:text-accent transition-colors"
           >
-            {SIZES.map(s => <option key={s} value={s} className="bg-surface text-textMain">{s}</option>)}
+            {SIZES.map(s => <option key={s} value={s} className="bg-surface/95 text-textMain hover:bg-accent/20">{s}</option>)}
           </select>
           <div className="absolute right-0 pointer-events-none text-textMain/50 group-hover:text-accent transition-colors">
              <ChevronDown size={14} />

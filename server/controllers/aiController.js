@@ -45,12 +45,19 @@ Classification:`;
     }
 
     // 2. THE IMAGE GENERATOR: Stable Diffusion XL Lightning
-    const enhancedPrompt = `${style ? style + ' style, ' : ''}highly detailed, 8k resolution, cinematic lighting, ${prompt}`;
-    const sizePromptStr = size ? ` ${size} aspect ratio` : "";
+    // Map size selections to proper aspect ratios
+    const sizeMap = {
+      'Square': '1:1',
+      'Landscape': '16:9',
+      'Portrait': '9:16'
+    };
+    const aspectRatio = sizeMap[size] || '1:1';
+    
+    const enhancedPrompt = `${style ? style + ' style, ' : ''}highly detailed, 8k resolution, cinematic lighting, ${prompt}, aspect ratio ${aspectRatio}`;
 
     const imageResponse = await axios.post(
       `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/bytedance/stable-diffusion-xl-lightning`,
-      { prompt: enhancedPrompt + sizePromptStr, num_steps: 4 },
+      { prompt: enhancedPrompt, num_steps: 4 },
       {
         headers: { 'Authorization': `Bearer ${apiToken}`, 'Content-Type': 'application/json' },
         responseType: 'arraybuffer' // Get binary data
